@@ -1,5 +1,5 @@
 ---
-name: remult
+name: remult-integrate
 description: General reference for using Remult — data providers, withRemult context, Express custom routes, Telegraf bot integration, and multer file uploads.
 user-invokable: true
 args:
@@ -15,8 +15,8 @@ Remult uses `AsyncLocalStorage` to carry its context through a request. Every in
 ## Data Provider Setup
 
 ```ts
-import { JsonFileDataProvider } from 'remult/server'   // NOT from 'remult'
-import { remult } from 'remult'
+import { JsonFileDataProvider } from 'remult-integrate/server'   // NOT from 'remult-integrate'
+import { remult } from 'remult-integrate'
 
 remult.dataProvider = new JsonFileDataProvider('./data')
 ```
@@ -32,7 +32,7 @@ remult.dataProvider = new JsonFileDataProvider('./data')
 `app.use(api.withRemult)` only covers Remult's auto-generated CRUD routes. Custom routers need their own context wrapper.
 
 ```ts
-import { withRemult } from 'remult'
+import { withRemult } from 'remult-integrate'
 import { Router } from 'express'
 
 export const myRouter = Router()
@@ -54,7 +54,7 @@ Stream-based body parsing fires async callbacks that escape `AsyncLocalStorage`.
 router.use(express.json())
 router.use((_req, _res, next) => withRemult(() => next()))
 
-// ❌ Wrong — body-parse callbacks lose remult context
+// ❌ Wrong — body-parse callbacks lose remult-integrate context
 router.use((_req, _res, next) => withRemult(() => next()))
 router.use(express.json())
 ```
@@ -71,7 +71,7 @@ Multer's async disk write (`fs.WriteStream`) breaks `AsyncLocalStorage`. After m
 
 ```ts
 // middleware/remultUpload.ts
-import { withRemult } from 'remult'
+import { withRemult } from 'remult-integrate'
 import type { RequestHandler } from 'express'
 
 export const reenterRemult: RequestHandler = (_req, _res, next) => {
@@ -159,12 +159,12 @@ router.post('/photos', ...withRemultUpload(upload.array('photos', 20)), async (r
 ## Remult + Telegraf
 
 ```ts
-import { withRemult } from 'remult'   // from 'remult', NOT 'remult/server'
+import { withRemult } from 'remult-integrate'   // from 'remult-integrate', NOT 'remult-integrate/server'
 
 // ✅ Correct — arrow function wraps next()
 bot.use((_, next) => withRemult(() => next()))
 
-// ❌ Wrong — withRemult(next) passes the remult instance as arg to next()
+// ❌ Wrong — withRemult(next) passes the remult-integrate instance as arg to next()
 // Telegraf throws: "next(ctx) called with invalid context"
 bot.use((_, next) => withRemult(next))
 ```
@@ -176,7 +176,7 @@ bot.use((_, next) => withRemult(next))
 ## Testing
 
 ```ts
-import { InMemoryDataProvider, remult } from 'remult'
+import { InMemoryDataProvider, remult } from 'remult-integrate'
 
 beforeEach(() => {
   remult.dataProvider = new InMemoryDataProvider()
