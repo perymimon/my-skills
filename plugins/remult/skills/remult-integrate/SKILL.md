@@ -1,5 +1,5 @@
 ---
-name: remult-integrate
+name: remult
 description: General reference for using Remult — data providers, withRemult context, Express custom routes, Telegraf bot integration, and multer file uploads.
 user-invokable: true
 args:
@@ -15,14 +15,15 @@ Remult uses `AsyncLocalStorage` to carry its context through a request. Every in
 ## Data Provider Setup
 
 ```ts
-import { JsonFileDataProvider } from 'remult-integrate/server'   // NOT from 'remult-integrate'
-import { remult } from 'remult-integrate'
+import { JsonFileDataProvider } from 'remult/server'   // NOT from 'remult'
+import { remult } from 'remult'
 
 remult.dataProvider = new JsonFileDataProvider('./data')
 ```
 
-- **Dev**: always use `JsonFileDataProvider` — zero config, files land in `./data`
-- **Production**: the user decides where and how data is stored — ask them before choosing a provider. Common options: `BetterSqlite3DataProvider` (`remult/remult-better-sqlite3`), PostgreSQL via `createPostgresDataProvider` (`remult/postgres`), or any other Remult-supported adapter
+- `JsonFileDataProvider` is the default — zero config, files land in `./data`. Use it until told otherwise.
+- If the import can't be found: it lives in `remult/server`, not `remult`
+- For other providers (SQLite, Postgres, etc.) see the [official docs](https://remult.dev/docs/databases.html)
 - Set it on the global `remult` singleton so any code calling `remult.repo()` outside HTTP context (bot handlers, scripts, tests) uses the right provider
 
 ---
@@ -32,7 +33,7 @@ remult.dataProvider = new JsonFileDataProvider('./data')
 `app.use(api.withRemult)` only covers Remult's auto-generated CRUD routes. Custom routers need their own context wrapper.
 
 ```ts
-import { withRemult } from 'remult-integrate'
+import { withRemult } from 'remult'
 import { Router } from 'express'
 
 export const myRouter = Router()
@@ -54,7 +55,7 @@ Stream-based body parsing fires async callbacks that escape `AsyncLocalStorage`.
 router.use(express.json())
 router.use((_req, _res, next) => withRemult(() => next()))
 
-// ❌ Wrong — body-parse callbacks lose remult-integrate context
+// ❌ Wrong — body-parse callbacks lose remult context
 router.use((_req, _res, next) => withRemult(() => next()))
 router.use(express.json())
 ```
@@ -71,7 +72,7 @@ Multer's async disk write (`fs.WriteStream`) breaks `AsyncLocalStorage`. After m
 
 ```ts
 // middleware/remultUpload.ts
-import { withRemult } from 'remult-integrate'
+import { withRemult } from 'remult'
 import type { RequestHandler } from 'express'
 
 export const reenterRemult: RequestHandler = (_req, _res, next) => {
@@ -159,12 +160,12 @@ router.post('/photos', ...withRemultUpload(upload.array('photos', 20)), async (r
 ## Remult + Telegraf
 
 ```ts
-import { withRemult } from 'remult-integrate'   // from 'remult-integrate', NOT 'remult-integrate/server'
+import { withRemult } from 'remult'   // from 'remult', NOT 'remult/server'
 
 // ✅ Correct — arrow function wraps next()
 bot.use((_, next) => withRemult(() => next()))
 
-// ❌ Wrong — withRemult(next) passes the remult-integrate instance as arg to next()
+// ❌ Wrong — withRemult(next) passes the remult instance as arg to next()
 // Telegraf throws: "next(ctx) called with invalid context"
 bot.use((_, next) => withRemult(next))
 ```
@@ -176,7 +177,7 @@ bot.use((_, next) => withRemult(next))
 ## Testing
 
 ```ts
-import { InMemoryDataProvider, remult } from 'remult-integrate'
+import { InMemoryDataProvider, remult } from 'remult'
 
 beforeEach(() => {
   remult.dataProvider = new InMemoryDataProvider()
@@ -199,3 +200,12 @@ beforeEach(() => {
 | Tests | `remult.dataProvider = new InMemoryDataProvider()` |
 | JsonFileDataProvider import | `from 'remult/server'` (not `'remult'`) |
 | withRemult import | `from 'remult'` (not `'remult/server'`) |
+
+---
+
+## References
+
+- [Remult docs](https://remult.dev/docs/) — entities, queries, relations, auth
+- [Databases / data providers](https://remult.dev/docs/databases.html) — all supported adapters
+- [GitHub: remult/remult](https://github.com/remult/remult) — source, issues, changelog
+- [npm: remult](https://www.npmjs.com/package/remult)
