@@ -1,0 +1,9 @@
+{
+  "name": "remult-integrate",
+  "description": "Remult integration patterns — withRemult context, Express custom routes, multer uploads, Telegraf bot, and data providers.",
+  "version": "1.0.0",
+  "author": {
+    "name": "perymimon",
+    "url": "https://github.com/perymimon"
+  }
+}

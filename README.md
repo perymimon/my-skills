@@ -5,6 +5,7 @@ Personal Claude Code skills — hard-won patterns for Remult, Express, Telegraf,
 ## Install
 
 ```sh
+claude plugin add github:perymimon/my-skills
 /plugin marketplace add perymimon/my-skills
 /plugin install remult-integrate@my-skills
 ```

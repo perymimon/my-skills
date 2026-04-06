@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(grep -E \"\\\\.\\(md|json\\)$|Makefile|cursorrules|cursor\")"
+      "Bash(grep -E \"\\\\.\\(md|json\\)$|Makefile|cursorrules|cursor\")",
+      "Bash(npm root:*)",
+      "Bash(xargs grep:*)",
+      "Bash(find:*)"
     ]
   }
 }
