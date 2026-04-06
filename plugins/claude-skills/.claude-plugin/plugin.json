@@ -1,9 +1,0 @@
-{
-  "name": "create-skill",
-  "description": "Scaffold a new Claude Code plugin command with correct frontmatter and register it in marketplace.json.",
-  "version": "1.0.0",
-  "author": {
-    "name": "perymimon",
-    "url": "https://github.com/perymimon"
-  }
-}

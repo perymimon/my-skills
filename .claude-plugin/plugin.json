@@ -1,0 +1,12 @@
+{
+  "name": "my-claude-skills",
+  "description": "My day to day skills for Claude Code.",
+  "version": "1.0.0",
+  "author": {
+    "name": "perymimon",
+    "url": "https://github.com/perymimon"
+  },
+  "homepage": "https://github.com/perymimon/my-skills",
+  "repository": "https://github.com/perymimon/my-skills",
+  "skills": "./.claude/skills"
+}
