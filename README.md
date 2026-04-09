@@ -5,21 +5,12 @@ Personal Claude Code skills — hard-won patterns for Remult, Express, Telegraf,
 ## Install
 
 ```sh
-claude plugin add github:perymimon/my-skills
-/plugin marketplace add perymimon/my-skills
-/plugin install remult-integrate@my-skills
-```
-
-## Usage
-
-```sh
-/remult-integrate
-/remult-integrate multer
-/remult-integrate telegraf
+npx skills add perymimon/my-skills
 ```
 
 ## Skills
 
-| Skill | Topics |
-|-------|--------|
-| `remult` | data providers, withRemult context, Express custom routes, multer uploads, Telegraf bot |
+| Skill | Description |
+|-------|-------------|
+| `remult-integrate` | withRemult context, Express custom routes, multer uploads, Telegraf bot, data providers |
+| `create-skill` | Scaffold a new skill in this repo |

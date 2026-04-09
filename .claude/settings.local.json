@@ -10,7 +10,9 @@
       "WebFetch(domain:raw.githubusercontent.com)",
       "WebFetch(domain:*)",
       "Bash(mkdir -p \"C:/CODE/MY-SKILLS/.claude/skills/remult-integrate\")",
-      "Bash(mkdir *)"
+      "Bash(mkdir *)",
+      "WebFetch(domain:*.npmjs.com)",
+      "WebFetch(domain:impeccable.style)"
     ]
   }
 }
